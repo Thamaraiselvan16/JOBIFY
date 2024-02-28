@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-lg mt-5">
+    <div class="card mx-auto" style="width: 100%;">
+        <div class="card-body">
+            <h5 class="card-title mb-3 text-center">All Applicants for '{{ job.job_title }}' Position</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            {% comment %} <th scope="col" class="d-none d-sm-table-cell">id</th> {% endcomment %}
+                            <th scope="col" class="d-none d-sm-table-cell">Name</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Email</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Phone number</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Age</th>
+                            <th scope="col" class="d-none d-sm-table-cell">City / State</th>                    
+                            <th scope="col" class="d-none d-sm-table-cell">Education</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Skills</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Current location</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Job Position / Title</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Experience</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Current Position</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Application Date</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Action</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for applicant in applicants %}
+                        <tr>
+                            {% comment %} <td>{{ applicant.user.resume.id }}</td> {% endcomment %}
+                            <td>{{ applicant.user.resume.first_name }} {{ applicant.user.resume.last_name }}</td>
+                            <td>{{ applicant.user.resume.email }}</td>
+                            <td>{{ applicant.user.resume.phone_no }}</td>
+                            <td>{{ applicant.user.resume.age }}</td>
+                            <td>{{ applicant.user.resume.city }} / {{ applicant.user.resume.state }}</td>                    
+                            <td>{{ applicant.user.resume.education }}</td>
+                            <td>{{ applicant.user.resume.skills }}</td>
+                            <td>{{ applicant.user.resume.location }}</td>
+                            <td>{{ applicant.user.resume.job_title }}</td>
+                            <td>{{ applicant.user.resume.experience }}</td>
+                            <td>{{ applicant.user.resume.current_position }}</td>
+                            <td>{{ applicant.timestamp }}</td>
+                            <td><a target="_blank" href="{{ applicant.user.resume.upload_resume.url }}" style="text-decoration: none;"><small>🔴Resume</small></a></td>
+                            {% comment %} <td>{{ applicant.status }}</td> {% endcomment %}
+                            <!-- Update the existing submit button -->
+                            <td>
+                                {% if applicant.status == "Pending" %}
+                                    <span class="badge bg-success status-cell">Pending</span>
+                                    <br><br>
+                                    {% comment %} <button type="button" class="btn btn-primary sm" onclick="submitApplication('{{ applicant.id }}')">Submit</button>                                 {% endcomment %}
+                                {% else %}
+                                    <span class="badge bg-warning status-cell">Accepted</span>
+                                {% endif %}
+                            </td>
+                            
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

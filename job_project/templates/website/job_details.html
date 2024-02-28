@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+<div class="container-lg mt-3 mb-0">
+    <section>
+        <div class="p-3 p-md-5 bg-light rounded-3">
+            <div class="container-fluid py-3">
+                <h2 class="display-5 fw-bold text-start">{{ job.job_title }}</h2>
+                <p class="col-md-15 fs-5 mt-3 text-start">
+                    <b>Location:</b> {{ job.city }} ( {{ job.state }} ) || <b>Job Type:</b> {{ job.job_type }} || <b>Industry:</b> {{ job.industry }} || <b>Salary:</b> {{ job.salary|intcomma }} LPA
+                    <br>
+                    <b>Available:</b>
+                    {% if job.is_available %}
+                            <span class="badge bg-success">Yes</span>
+                    {% else %}
+                            <span class="badge bg-warning">No</span>
+                    {% endif %}
+                </p>
+                {% if request.user.has_resume and has_applied == False %}
+                    <a href="{% url 'apply-to-job' job.pk %}" class="btn btn-primary btn-lg">Apply Now</a>
+                    {% comment %} <a href="{% url 'email-send'  %}" class="btn btn-primary btn-lg">Apply Now</a> {% endcomment %}
+                {% elif request.user.has_resume and has_applied == True  %}
+                    <a href="#" class="btn btn-danger btn-sm mt-3">You have already applied for this job !!!</a>
+                    <a href="{% url 'job-listing' %}" class="btn btn-primary btn-sm mt-3">Apply More Jobs !</a>
+                {% elif request.user.has_resume %}
+                    <a href="{% url 'update-resume' %}" class="btn btn-primary btn-lg">Upload resume to apply</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Apply with Applicant ID</a>
+                {% endif %}
+                <div class="card-footer text-center">
+                    <small class="text-muted">Posted on {{ job.timestamp|timesince }} ago</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="p-3 p-md-5 mb-6 bg-light rounded-3">
+            <div class="container-fluid py-3">
+                <section>
+                    <h3 class="highlight-text">Job Description</h3>
+                    <p>{{ job.requirements }}</p>
+                    <p><b>Experience :</b> {{ job.experience }}</p>
+                </section>
+                <br>
+                <section>
+                    <h3 class="highlight-text">Required Skills</h3>
+                    <p>{{ job.skills }}</p>
+                </section>
+                <br>
+                <section>
+                    <h3 class="highlight-text">Ideal Candidate</h3>
+                    <p>{{ job.ideal_candidate }}</p>
+                </section>
+                <br>
+                <section>
+                    <h3 class="card-title highlight-text">About the Company</h3><br>
+                    <p class="card-text"><b>Company Name :</b> {{ job.company.company_name }}</p>
+                    <p class="card-text"><b>Location :</b> {{ job.company.city }}, {{ job.company.state }}</p>
+                    <p class="card-text"><b>Established Year :</b> {{ job.company.est_date }}</p>
+                    <p class="card-text"><b>Address :</b> {{ job.company.company_address }}</p>
+                    <p class="card-text"><b>Company Email id :</b> {{ job.company.company_email_id }}</p>
+                    <p class="card-text"><b>Contact Number :</b> {{ job.company.company_contact_number }}</p>
+                    <p class="card-text"><b>Company Website :</b> <a href="{{ job.company.company_website }}" target="_blank"  >Click </a> 🌐</p>
+                    <p class="card-text"><b>Company Location :</b> <a href="{{ job.company.current_company_location }}" target="_blank"  >Click </a> 📌</p>
+                </section>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .highlight-text {
+        color: #007bff; /* Use any color you prefer */
+        text-decoration: underline;
+        margin-bottom: 0.5em;
+    }
+</style>
+
+{% endblock content %}

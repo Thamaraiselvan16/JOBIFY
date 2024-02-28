@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="container-lg mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card mx-auto">
+                <!-- <img src="..." class="card-img-top" alt="..."> -->
+                <div class="card-body">
+                    <h5 class="card-title mb-3 text-center">Create A Profile</h5>
+                    
+                    <form method="POST" enctype="multipart/form-data" id="myForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">First Name <b style="color: red;">*</b></label>
+                            {% render_field form.first_name  class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Last Name <b style="color: red;">*</b></label>
+                            {% render_field form.last_name class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email <b style="color: red;">*</b></label>
+                            {% render_field form.email class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Phone Number <b style="color: red;">*</b></label>
+                            {% render_field form.phone_no class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Age <b style="color: red;">*</b></label>
+                            {% render_field form.age class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">City <b style="color: red;">*</b></label>
+                            {% render_field form.city class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">State <b style="color: red;">*</b></label>
+                            {% render_field form.state class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Education <b style="color: red;">*</b></label>
+                            <select name="{{ form.education.name }}" class="form-select">
+                                {% for option in form.education.field.choices %}
+                                    <option value="{{ option.0 }}" {% if option.0 == form.education.value %}selected{% endif %}>
+                                        {{ option.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Current location <b style="color: red;">*</b></label>
+                            {% render_field form.location class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Job title <b style="color: red;">*</b></label>
+                            {% render_field form.job_title class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Experience <b style="color: red;">*</b></label>
+                            {% render_field form.experience class="form-control" %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Current Position <b style="color: red;">*</b></label>
+                            {% render_field form.current_position class="form-control" %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Skills <b style="color: red;">*</b></label>
+                            <textarea id="id_skills" name="skills" class="form-control form-skills" rows="4" placeholder="Enter your skills...">{{ form.skills.value }}</textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Upload Resume <b style="color: red;">*</b></label><br>
+                            {% render_field form.upload_resume class="form-control" %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100" onclick="validateForm()" >Submit</button>
+                    </form>
+                    <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of card's content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function validateForm() {
+        var formElements = document.getElementById('myForm').elements;
+        var isValid = true;
+
+        for (var i = 0; i < formElements.length; i++) {
+            if (formElements[i].type !== 'submit' && formElements[i].type !== 'button') {
+                var fieldValue = formElements[i].value.trim();
+
+                if (formElements[i].name === 'upload_resume') {
+                    continue; // Skip validation for the "Upload Resume" field
+                }
+
+                if (formElements[i].name === 'phone_no') {
+                    // Check if the phone number is exactly 10 digits
+                    if (!/^\d{10}$/.test(fieldValue)) {
+                        isValid = false;
+                        displayError(formElements[i], 'Phone number must be 10 digits.');
+                        break;
+                    }
+                } else if (formElements[i].name === 'age') {
+                    // Check if the age is between 18 and 100
+                    var ageValue = parseInt(fieldValue, 10);
+                    if (isNaN(ageValue) || ageValue < 18 || ageValue >= 100) {
+                        isValid = false;
+                        displayError(formElements[i], 'Age must be between 18 and 99.');
+                        break;
+                    }
+                } else if (fieldValue === '') {
+                    // Check for other fields being empty
+                    isValid = false;
+                    displayError(formElements[i], 'Please fill in this field.');
+                    break;
+                }
+            }
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Prevent form submission if validation fails
+        }
+    }
+
+    function displayError(element, message) {
+        var errorDiv = document.createElement('div');
+        errorDiv.className = 'text-danger';
+        errorDiv.textContent = message;
+
+        var parentDiv = element.closest('.mb-3');
+        parentDiv.appendChild(errorDiv);
+
+        element.focus(); // Set focus on the field with the validation error
+    }
+</script>
+
+
+
+
+
+
+
+{% comment %} <script>
+    function validateForm() {
+        var formElements = document.getElementById('myForm').elements;
+        var isValid = true;
+
+        for (var i = 0; i < formElements.length; i++) {
+            if (formElements[i].type !== 'submit' && formElements[i].type !== 'button') {
+                if (formElements[i].value.trim() === '') {
+                    isValid = false;
+                    break;
+                }
+            }
+        }
+
+        if (!isValid) {
+            alert('Please fill in all form fields');
+            event.preventDefault(); // Prevent form submission if validation fails
+        }
+    }
+</script> {% endcomment %}
+
+{% endblock content %}

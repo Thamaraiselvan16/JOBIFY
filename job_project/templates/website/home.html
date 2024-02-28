@@ -1,0 +1,85 @@
+{% extends 'base.html' %} 
+{% load humanize %}
+{% load widget_tweaks %}
+
+{% block content %} 
+
+<div class="container-lg mt-5">
+    <section>
+        <div class="p-5 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5">
+                <h2 class="display-5 fw-bold text-center">Job Portal. Get Hired Quickly!</h2>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <form class="row row-cols-1 row-cols-md-2 row-cols-lg-3 gy-2 gx-3 align-items-center" method="GET">
+                            <div class="col">
+                                <label for="autoSizingInput">Job Title</label>
+                                {% render_field filter.form.title class="form-control" id="autoSizingInput" placeholder="Job Keyword" %}
+                            </div>
+                            <div class="col">
+                                <label for="autoSizingSelect">Select Location</label>
+                                {% render_field filter.form.state class="form-select" %}
+                            </div>
+                            <div class="col">
+                                <label for="autoSizingSelect">Choose Job Type</label>
+                                {% render_field filter.form.job_type class="form-select" %}
+                            </div>
+                            <div class="col">
+                                <label for="autoSizingSelect">Select Industry</label>
+                                {% render_field filter.form.industry class="form-select" %}
+                            </div>
+                            <div class="col mt-auto">
+                                <button type="submit" class="btn btn-primary w-100 mt-3">Search</button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+                <p class="col-md-15 fs-6 mt-3 text-center">
+                    Welcome to Django Job Portal! Search and get your dream job. We have thousands of job offerings for you. Don't forget to leave a like when you get a job. Good luck with your job hunt.
+                </p>
+                {% if request.user.is_recruiter and request.user.has_company%}
+                <div class="text-center">
+                    <a href="{% url 'job-listing' %}" class="btn btn-outline-primary" type="button">More Jobs</a>
+                </div>
+                {% elif request.user.is_recruiter or  request.user.has_company%}
+                <div class="text-center">
+                    <a href="{% url 'update-company' %}" class="btn btn-outline-primary" type="button">Create company</a>
+                </div>
+                {% elif request.user.is_applicant and  request.user.has_resume%}
+                <div class="text-center">
+                    <a href="{% url 'job-listing' %}" class="btn btn-outline-primary" type="button">More Jobs</a>
+                </div>
+                {% elif request.user.is_applicant or request.user.has_resume%}
+                <div class="text-center">
+                    <a href="{% url 'update-resume' %}" class="btn btn-outline-primary" type="button">Create Profile</a>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for job in filter.qs %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ job.job_title }}</h5>
+                    <p class="card-text">Industry : {{ job.industry }}</p>
+                    <p class="card-text">Job Type : {{ job.job_type }}</p>
+                    <p class="card-text">Location : {{ job.city }}, {{ job.state }}</p>
+                    <p class="card-text">Salary   : {{ job.salary }} LPA</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Posted on {{ job.timestamp|timesince }} ago</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <br>
+</div>
+
+{% endblock content %}

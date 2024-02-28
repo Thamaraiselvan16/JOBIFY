@@ -1,0 +1,35 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+  <div class="container-lg mt-5"> <!-- Increased to container-lg -->
+    <div class="row justify-content-center">
+      <div class="col-md-15"> <!-- Adjusted column size -->
+        <form class="p-4 p-md-5 border rounded-3 bg-light shadow-lg" method="POST">
+          {% csrf_token %}
+          <h2 class="mb-4 text-center">Sign In</h2>
+          <div class="mb-3">
+            <label for="inputEmail" class="form-label">Email address</label>
+            <input type="email" name="email" class="form-control" id="inputEmail" placeholder="name@example.com" required>
+          </div>
+          <div class="mb-3">
+            <label for="inputPassword" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password" required>
+          </div>
+          {% comment %} <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="rememberMe">
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+          </div> {% endcomment %}
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign In</button>
+          <hr class="my-4">
+          <div class="text-muted text-center">
+            <p class="mb-1">Don't have an account?</p>
+            <div class="d-flex justify-content-around">
+              <a href="{% url 'register-applicant' %}" class="btn btn-outline-secondary">Register as an Applicant</a>
+              <a href="{% url 'register-recruiter' %}" class="btn btn-outline-secondary">Register as a Recruiter</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

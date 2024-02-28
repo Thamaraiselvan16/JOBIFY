@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="container-lg mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card mx-auto">
+                <div class="card-body">
+                    <h5 class="card-title mb-3 text-center">Create A Company</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Recruiter First Name <b style="color: red;">*</b></label>
+                            {% render_field form.rec_first_name class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Recruiter Last Name <b style="color: red;">*</b></label>
+                            {% render_field form.rec_last_name class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Company Name <b style="color: red;">*</b></label>
+                            {% render_field form.company_name class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Company Email <b style="color: red;">*</b></label>
+                            {% render_field form.company_email_id class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Company Established Year <b style="color: red;">*</b></label>
+                            {% render_field form.est_date class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">City <b style="color: red;">*</b></label>
+                            {% render_field form.city class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">State <b style="color: red;">*</b></label>
+                            {% render_field form.state class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Company Address <b style="color: red;">*</b></label>
+                            {% render_field form.company_address class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Company Contact Number <b style="color: red;">*</b></label>
+                            {% render_field form.company_contact_number class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Company Website</label>
+                            {% render_field form.company_website class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Company Current Location link <b style="color: red;">*</b></label>
+                            {% render_field form.current_company_location class="form-control" %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector('form');
+
+        form.addEventListener("submit", function (event) {
+            let isValid = true;
+
+            // Validate not null fields
+            const notNullFields = ['rec_first_name', 'rec_last_name', 'company_name','company_email_id', 'est_date', 'city', 'state', 'company_address', 'company_contact_number', 'current_company_location'];
+            notNullFields.forEach(function (field) {
+                const input = form.querySelector(`[name=${field}]`);
+                const errorContainer = input.parentElement.querySelector('.error-message');
+
+                if (!input.value.trim()) {
+                    if (!errorContainer) {
+                        const errorMessage = document.createElement('div');
+                        errorMessage.classList.add('error-message');
+                        errorMessage.classList.add('text-danger'); // Set text color to red
+                        errorMessage.innerText = `"${field}" cannot be empty.`;
+                        input.parentElement.appendChild(errorMessage);
+                    }
+                    isValid = false;
+                    input.focus(); // Set focus on the input field
+                } else {
+                    if (errorContainer) {
+                        errorContainer.remove();
+                    }
+                }
+            });
+
+            // Validate company contact number
+            const contactNumberInput = form.querySelector('[name=company_contact_number]');
+            const contactNumberRegex = /^\+?1?\d{9,15}$/;
+            const contactNumberErrorContainer = contactNumberInput.parentElement.querySelector('.error-message');
+            if (!contactNumberRegex.test(contactNumberInput.value.trim())) {
+                if (!contactNumberErrorContainer) {
+                    const errorMessage = document.createElement('div');
+                    errorMessage.classList.add('error-message');
+                    errorMessage.classList.add('text-danger'); // Set text color to red
+                    errorMessage.innerText = "Please enter a valid phone number for Company Contact Number.";
+                    contactNumberInput.parentElement.appendChild(errorMessage);
+                }
+                isValid = false;
+                contactNumberInput.focus(); // Set focus on the input field
+            } else {
+                if (contactNumberErrorContainer) {
+                    contactNumberErrorContainer.remove();
+                }
+            }
+
+            // Validate company established year
+            const estDateInput = form.querySelector('[name=est_date]');
+            const currentYear = new Date().getFullYear();
+            const estDateErrorContainer = estDateInput.parentElement.querySelector('.error-message');
+            if (estDateInput.value.trim() > currentYear) {
+                if (!estDateErrorContainer) {
+                    const errorMessage = document.createElement('div');
+                    errorMessage.classList.add('error-message');
+                    errorMessage.classList.add('text-danger'); // Set text color to red
+                    errorMessage.innerText = "Company Established Year cannot be greater than the current year.";
+                    estDateInput.parentElement.appendChild(errorMessage);
+                }
+                isValid = false;
+                estDateInput.focus(); // Set focus on the input field
+            } else {
+                if (estDateErrorContainer) {
+                    estDateErrorContainer.remove();
+                }
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="container-lg mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card mx-auto">
+                <div class="card-body">
+                    <h5 class="card-title mb-3 text-center">Create A Job AD</h5>
+                    <form method="POST" id="jobAdForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Job Title <b style="color: red;">*</b></label>
+                            {% render_field form.job_title class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Experience <b style="color: red;">*</b></label>
+                            {% render_field form.experience class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Salary (LPA) <b style="color: red;">*</b></label>
+                            {% render_field form.salary class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">City <b style="color: red;">*</b></label>
+                            {% render_field form.city class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">State <b style="color: red;">*</b></label>
+                            {% render_field form.state class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Industry <b style="color: red;">*</b></label>
+                            {% render_field form.industry class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Job Type <b style="color: red;">*</b></label>
+                            {% render_field form.job_type class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Skills <b style="color: red;">*</b></label>
+                            <textarea id="id_skills" name="skills" class="form-control form-skills" rows="4" placeholder="Enter your recruitment skills...">{{ form.skills.value }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Job Description <b style="color: red;">*</b></label>
+                            {% render_field form.requirements|attr:"rows:2" class="form-control" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Ideal Candidate <b style="color: red;">*</b></label>
+                            {% render_field form.ideal_candidate|attr:"rows:2" class="form-control" %}
+                        </div>
+                        <div class="mb-3 form-check">
+                            <label class="form-check-label" for="exampleInputEmail1">Is this Job Available</label>
+                            {% render_field form.is_available class="form-check-input" %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100" onclick="validateForm()">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        var formElements = document.getElementById('jobAdForm').elements;
+        var isValid = true;
+
+        for (var i = 0; i < formElements.length; i++) {
+            if (formElements[i].type !== 'button') {
+                var fieldValue = formElements[i].value.trim();
+
+                if (formElements[i].name === 'salary') {
+                    // Check if salary is a positive integer
+                    if (!/^\d+$/.test(fieldValue) || parseInt(fieldValue) <= 0) {
+                        isValid = false;
+                        displayError(formElements[i], 'Salary must be a positive integer.');
+                        break;
+                    }
+                } else if (fieldValue === '') {
+                    isValid = false;
+                    displayError(formElements[i], 'Please fill in this field.');
+                    break;
+                }
+            }
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Prevent the default form submission
+        }
+    }
+
+    function displayError(element, message) {
+        var errorDiv = document.createElement('div');
+        errorDiv.className = 'text-danger';
+        errorDiv.textContent = message;
+
+        var parentDiv = element.closest('.mb-3');
+        parentDiv.appendChild(errorDiv);
+
+        element.focus();
+    }
+</script>
+
+
+{% endblock content %}

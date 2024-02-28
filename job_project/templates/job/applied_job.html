@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-lg mt-5">
+    <div class="card mx-auto" style="max-width: 76rem;">
+        {% comment %} <img src="..." class="card-img-top" alt="..."> {% endcomment %}
+        <div class="card-body">
+            <h5 class="card-title mb-3 text-center">Manage Jobs</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">Company Name</th>
+                            <th scope="col">Recruiter name</th>
+                            <th scope="col">Job title</th>
+                            <th scope="col">Experience</th>
+                            <th scope="col">Location</th>
+                            <th scope="col">Salary (LPA)</th>
+                            <th scope="col">Job Type</th>
+                            <th scope="col">Industry</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td>{{ job.job.company }}</td>
+                            <td>{{ job.job.company.rec_first_name }} {{ job.job.company.rec_last_name }}</td>
+                            <td>{{ job.job.job_title }}</td>
+                            <td>{{ job.job.experience }}</td>
+                            <td>{{ job.job.city }}, {{ job.job.state }}</td>
+                            <td>{{ job.job.salary }}</td>
+                            <td>{{ job.job.job_type }}</td>
+                            <td>{{ job.job.industry }}</td>
+                            {% if job.job.is_available %}
+                                <td><span class="badge bg-success">Active</span></td>
+                            {% else %}
+                                <td><span class="badge bg-warning">Not Active</span></td>
+                            {% endif %}
+                            <td><a href="{% url 'job-details' job.job.pk %}"><small>View Job</small></a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% comment %} <p class="card-text">Some quick example text to build on the card title and make up the bulk of card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere </a> {% endcomment %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

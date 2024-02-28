@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Link Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Link your custom CSS file -->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/css/select2.min.css" rel="stylesheet" />
+
+
+
+    <title>Job Portal</title>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container-fluid {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        .welcome-text {
+            color: #007bff;
+        }
+
+        .advanced-form {
+            margin-top: 20px;
+        }
+
+        .advanced-form label {
+            font-weight: bold;
+        }
+
+        .advanced-form input[type="text"],
+        .advanced-form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .advanced-form button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .advanced-form button:hover {
+            background-color: #0056b3;
+        }
+        /* In your CSS file */
+        .custom-brand {
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background-color: #4CAF50;
+            padding: 9px 9px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4) ;transition: background-color 0.3s ease, transform 0.3s ease;
+            background-color: #f8f9fa;
+            color: #495057;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.5s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .custom-brand:hover {
+            background-color: #ffffff;
+            color: #495057;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.133);
+            transform: scale(1.02);
+        }
+        
+        
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- In your HTML template -->
+            <a class="navbar-brand custom-brand" href="{% url 'home' %}">Job Portal</a>
+            <ul class="navbar-nav me-auto ">
+                {% if request.user.is_applicant and request.user.has_resume %}
+                <li class="nav-item"><a class="nav-link" disabled><b>You are an Applicant</b></a></li>
+                {% elif request.user.is_applicant %}
+                <li class="nav-item"><a class="nav-link" disabled><b>You are an Applicant</b></a></li>
+                {% elif request.user.is_recruiter and request.user.has_company %}
+                <li class="nav-item"><a class="nav-link" disabled><b>You are an Recruiter at <b>{{ request.user.company.company_name }} </b></b></a></li>
+                {% elif request.user.is_recruiter %}
+                <li class="nav-item"><a class="nav-link" disabled><b>You are an Recruiter</b></a></li>
+                {% endif %}
+            </ul>
+            <br>
+
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            {% comment %} <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if request.user.is_applicant %}
+                    <li class="nav-item"><a class="nav-link" disabled><b>You are an Applicant</b></a></li>
+                    {% elif request.user.is_recruiter %}
+                    <li class="nav-item"><a class="nav-link" disabled><b>You are an Recruiter</b></a></li>
+                    {% endif %}
+                </ul>
+            </div> {% endcomment %}
+
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if request.user.is_authenticated %}
+                    {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}" disabled>{{ request.user.first_name }} {{ request.user.last_name }}</a></li> {% endcomment %}
+                
+                    {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}" disabled>{{ request.user.email }}</a></li> {% endcomment %}
+
+                        {% if request.user.is_applicant %}
+                            
+                            <!-- Applicant Links -->
+                            {% comment %} <li class="nav-item"><a class="nav-link" disabled><b>You are an Applicant</b></a></li> {% endcomment %}
+                            {% if request.user.has_resume %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}" disabled><b>{{ request.user.resume.first_name }} {{ request.user.resume.last_name }}</b></a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'job-listing' %}">Apply to Jobs</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'applied-jobs' %}">Applied jobs</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'update-resume' %}">Update Profile</a></li>
+                            {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}" disabled><b>{{ request.user.first_name }} {{ request.user.last_name }}</b></a></li>
+
+                            {% endif %}
+
+                        {% elif request.user.is_recruiter %}
+                            <!-- Recruiter Links -->
+                            {% if request.user.has_company %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}" disabled><b>{{ request.user.company.rec_first_name }} {{ request.user.company.rec_last_name }} </b></a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'create-job' %}">Create Job Ads</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'manage-jobs' %}">Manage Jobs</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'update-company' %}">Update Company</a></li>
+                            {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}" disabled><b>{{ request.user.first_name }} {{ request.user.last_name }}</b></a></li>
+                            {% endif %}
+                        {% endif %}
+                        <li class="nav-item"><a class="btn btn-danger" href="{% url 'logout' %}"><b>Logout</b></a></li>
+                        {% else %}
+                        <!-- Links for Non-Authenticated Users -->
+                        <li class="nav-item">
+                            {% if request.user.has_company %}
+                            <a class="nav-link" href="{% url 'job-listing' %}"><b>All Jobs</b></a></li>
+                            {% endif %}
+                        <li class="nav-item">
+                            <a class="btn btn-success" href="{% url 'login' %}">
+                                <b>Log In</b>
+                            </a>
+                        </li>
+                        {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">
+                    <b>{{ message }}</b>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+    <!-- Link Bootstrap JS and Popper.js (required for Bootstrap dropdowns) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/js/select2.min.js"></script>
+</body>
+
+</html>
+ 

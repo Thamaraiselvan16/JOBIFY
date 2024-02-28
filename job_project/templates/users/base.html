@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1 shrink-to-fit=no">
+
+    <!-- Link Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Link your custom CSS file -->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <title>Django Job Portal</title>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container-fluid {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        .welcome-text {
+            color: #007bff;
+        }
+
+        .advanced-form {
+            margin-top: 20px;
+        }
+
+        .advanced-form label {
+            font-weight: bold;
+        }
+
+        .advanced-form input[type="text"],
+        .advanced-form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .advanced-form button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .advanced-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container col-xl-10 col-xx1-8 px-4 py-5">
+        <div class="row align-items-center g-lg-5 py-5">
+            <div class="col-lg-7 text-center text-lg-start">
+                <h1 class="display-4 fw-bold lh-l mb-3">Welcome to Job Portal</h1>
+                <p class="col-lg-10 fs-4">
+                    Discover the perfect job that aligns with your unique experience, expertise, and skill sets. The job market is full of opportunities for all. Best of luck in your search! 
+                </p>
+            </div>
+            <div class="col-md-10 mx-auto col-lg-5">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            <b>{{ message }}</b>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS from CDN if needed -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

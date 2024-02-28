@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load humanize %} 
+{% block content %}
+
+<div class="container-lg mt-5">
+    <section>
+        <div class="p-5 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5">
+                <h2 class="display-5 fw-bold text-center">Job Portal. Get Hired Quickly!</h2>
+                <p class="col-md-15 fs-5 mt-3 text-center">
+                    All Available Jobs
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% if jobs %}
+        {% for job in jobs %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ job.job_title }}</h5>
+                    <p class="card-text">Job Location : {{ job.company.city }}, {{ job.company.state }}</p>
+                    <p class="card-text">Salary : {{ job.salary|intcomma }} LPA</p>
+                    <p class="card-text">Experience : {{ job.experience }}</p>
+                    <p class="card-text">Posted by : <b>{{ job.company.company_name }}</b></p>
+                    <p class="card-text">Created by : <b>{{ job.company.rec_first_name }} {{ job.company.rec_last_name }}</b> " Recruiter at <b>{{ job.company.company_name }}</b> "</p>
+                </div>
+                <div class="card-footer text-center">
+                {% if request.user.is_applicant or request.user.is_recruiter %}
+                    <a class="btn btn-primary btn-sm" href="{% url 'job-details' job.pk %}">View Details</a>
+                {% else %}
+                    <a class="btn btn-primary btn-sm" href="{% url 'login' %}">Login to apply</a>
+                {% endif %}
+                </div>
+                <div class="card-footer text-center">
+                    <small class="text-muted">Posted on {{ job.timestamp|timesince }} ago</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <br>
+</div>
+
+{% endblock content %}
